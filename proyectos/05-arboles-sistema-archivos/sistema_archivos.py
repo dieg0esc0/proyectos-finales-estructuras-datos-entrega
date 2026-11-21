@@ -3,17 +3,39 @@ from nodo import Nodo
 
 class SistemaArchivos:
     def __init__(self, nombre_raiz):
-        self.raiz = Nodo(nombre_raiz, "", 0, "Directorio")
+        if not self._nombre_valido(nombre_raiz):
+            raise ValueError("El nombre de la raíz debe ser un texto no vacío.")
+
+        self.raiz = Nodo(nombre_raiz.strip(), "", 0, "Directorio")
+
+    def _nombre_valido(self, nombre):
+        return isinstance(nombre, str) and nombre.strip() != ""
+
+    def _extension_valida(self, extension):
+        return isinstance(extension, str) and extension.strip().lstrip(".") != ""
 
     def mostrar_raiz(self):
         return self.raiz.obtener_informacion()
 
     def insertar_directorio(self, nombre):
-        nuevo = Nodo(nombre, "", 0, "Directorio")
+        if not self._nombre_valido(nombre):
+            return "No se pudo insertar el directorio: el nombre debe ser un texto no vacío."
+
+        nuevo = Nodo(nombre.strip(), "", 0, "Directorio")
         return self._insertar_nodo(nuevo)
 
     def insertar_archivo(self, nombre, extension, tamano):
-        nuevo = Nodo(nombre, extension, tamano, "Archivo")
+        if not self._nombre_valido(nombre):
+            return "No se pudo insertar el archivo: el nombre debe ser un texto no vacío."
+
+        if not self._extension_valida(extension):
+            return "No se pudo insertar el archivo: la extensión debe ser un texto no vacío."
+
+        if not isinstance(tamano, int) or isinstance(tamano, bool) or tamano < 0:
+            return "No se pudo insertar el archivo: el tamaño debe ser un entero no negativo."
+
+        extension = extension.strip().lstrip(".")
+        nuevo = Nodo(nombre.strip(), extension, tamano, "Archivo")
         return self._insertar_nodo(nuevo)
 
     def _insertar_nodo(self, nuevo):
@@ -44,8 +66,11 @@ class SistemaArchivos:
                 actual = actual.hijo_derecho
 
     def buscar(self, nombre):
+        if not self._nombre_valido(nombre):
+            return None
+
         actual = self.raiz
-        nombre_buscado = nombre.lower()
+        nombre_buscado = nombre.strip().lower()
 
         while actual is not None:
             nombre_actual = actual.nombre.lower()
@@ -101,6 +126,10 @@ class SistemaArchivos:
 
 
     def eliminar(self, nombre):
+        if not self._nombre_valido(nombre):
+            return "No se pudo eliminar: el nombre debe ser un texto no vacío."
+
+        nombre = nombre.strip()
         encontrado = self.buscar(nombre)
 
         if encontrado is None:
