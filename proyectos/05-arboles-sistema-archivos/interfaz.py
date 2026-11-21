@@ -76,9 +76,9 @@ class InterfazSistemaArchivos:
         boton_salir.pack(anchor=tk.E)
 
         self.actualizar_campos(self.tipo_elemento.get())
-        self.canvas_arbol.bind("<Configure>", self.dibujar_raiz)
+        self.canvas_arbol.bind("<Configure>", self.dibujar_arbol)
         self.ventana.update_idletasks()
-        self.dibujar_raiz()
+        self.dibujar_arbol()
 
     def actualizar_campos(self, tipo_seleccionado):
         self.entrada_extension.config(state=tk.NORMAL)
@@ -112,19 +112,49 @@ class InterfazSistemaArchivos:
             if tipo == "Archivo":
                 self.entrada_extension.delete(0, tk.END)
                 self.entrada_tamano.delete(0, tk.END)
+            self.dibujar_arbol()
 
-    def dibujar_raiz(self, evento=None):
+    def dibujar_arbol(self, evento=None):
         canvas = self.canvas_arbol
         canvas.delete("all")
-        raiz = self.sistema.raiz
-        centro_x = canvas.winfo_width() // 2
+        ancho = canvas.winfo_width()
+        centro_x = ancho // 2
+        separacion = max(80, ancho // 4)
+
+        self._dibujar_nodo(self.sistema.raiz, centro_x, 54, separacion)
+        canvas.tag_lower("conexion")
+
+    def _dibujar_nodo(self, nodo, x, y, separacion):
+        if nodo is None:
+            return
+
+        canvas = self.canvas_arbol
+        x_izquierdo = x - separacion
+        x_derecho = x + separacion
+        y_hijos = y + 95
+        separacion_hijos = max(80, separacion // 2)
+
+        if nodo.hijo_izquierdo is not None:
+            canvas.create_line(x, y, x_izquierdo, y_hijos, fill="#818794", tags="conexion")
+        if nodo.hijo_derecho is not None:
+            canvas.create_line(x, y, x_derecho, y_hijos, fill="#818794", tags="conexion")
+
+        self._dibujar_nodo(nodo.hijo_izquierdo, x_izquierdo, y_hijos, separacion_hijos)
+        self._dibujar_nodo(nodo.hijo_derecho, x_derecho, y_hijos, separacion_hijos)
+
+        if nodo.tipo == "Directorio":
+            nombre = f"📁 {nodo.nombre}"
+            fondo, borde, color_texto = "#DDEEFF", "#5286BC", "#173654"
+        else:
+            nombre = f"📄 {nodo.nombre}"
+            if nodo.extension:
+                nombre += f".{nodo.extension}"
+            fondo, borde, color_texto = "#DCF4E2", "#438855", "#19482A"
 
         canvas.create_rectangle(
-            centro_x - 100, 30, centro_x + 100, 78, fill="#DDEEFF", outline="#5286BC"
+            x - 70, y - 22, x + 70, y + 22, fill=fondo, outline=borde
         )
-        canvas.create_text(
-            centro_x, 54, text=f"Directorio: {raiz.nombre}", fill="#173654"
-        )
+        canvas.create_text(x, y, text=nombre, fill=color_texto, width=128)
 
     def mostrar_mensaje(self, mensaje):
         self.resultados.config(state=tk.NORMAL)
