@@ -98,3 +98,57 @@ class SistemaArchivos:
         self._postorden(nodo.hijo_izquierdo, resultado)
         self._postorden(nodo.hijo_derecho, resultado)
         resultado.append(nodo)
+
+
+    def eliminar(self, nombre):
+        encontrado = self.buscar(nombre)
+
+        if encontrado is None:
+            return f"No se pudo eliminar '{nombre}': el elemento no existe."
+
+        if encontrado is self.raiz:
+            return f"No se pudo eliminar '{nombre}': es la raíz del árbol."
+
+        tiene_hijos = (
+            encontrado.hijo_izquierdo is not None
+            or encontrado.hijo_derecho is not None
+        )
+        if encontrado.tipo == "Directorio" and tiene_hijos:
+            return f"No se pudo eliminar '{nombre}': el directorio tiene hijos."
+
+        self.raiz = self._eliminar_nodo(self.raiz, nombre)
+        return f"{encontrado.tipo} '{encontrado.nombre}' eliminado correctamente."
+
+    def _eliminar_nodo(self, nodo, nombre):
+        if nodo is None:
+            return None
+
+        nombre_buscado = nombre.lower()
+        nombre_actual = nodo.nombre.lower()
+
+        if nombre_buscado < nombre_actual:
+            nodo.hijo_izquierdo = self._eliminar_nodo(nodo.hijo_izquierdo, nombre)
+        elif nombre_buscado > nombre_actual:
+            nodo.hijo_derecho = self._eliminar_nodo(nodo.hijo_derecho, nombre)
+        else:
+            if nodo.hijo_izquierdo is None and nodo.hijo_derecho is None:
+                return None
+
+            if nodo.hijo_izquierdo is None:
+                return nodo.hijo_derecho
+            if nodo.hijo_derecho is None:
+                return nodo.hijo_izquierdo
+
+            sucesor = self._buscar_menor(nodo.hijo_derecho)
+            nodo.nombre = sucesor.nombre
+            nodo.extension = sucesor.extension
+            nodo.tamano = sucesor.tamano
+            nodo.tipo = sucesor.tipo
+            nodo.hijo_derecho = self._eliminar_nodo(nodo.hijo_derecho, sucesor.nombre)
+
+        return nodo
+
+    def _buscar_menor(self, nodo):
+        while nodo.hijo_izquierdo is not None:
+            nodo = nodo.hijo_izquierdo
+        return nodo

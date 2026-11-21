@@ -8,17 +8,23 @@ if __name__ == "__main__":
     sistema.insertar_archivo("Agenda", "txt", 5)
     sistema.insertar_archivo("Tarea", "txt", 10)
 
-    print("Recorrido inorden")
+    print("Inorden antes de eliminar:")
     for nodo in sistema.recorrido_inorden():
-        print(nodo.obtener_informacion())
-        print()
+        print(f"- {nodo.nombre} ({nodo.tipo})")
 
-    print("Recorrido preorden")
-    for nodo in sistema.recorrido_preorden():
-        print(nodo.obtener_informacion())
-        print()
+    print("\nIntentos de eliminación:")
+    print(sistema.eliminar("Documentos"))
+    print(sistema.eliminar("Fotos"))
+    print(sistema.eliminar("Apuntes"))
+    print(sistema.eliminar("agenda"))
 
-    print("Recorrido postorden")
-    for nodo in sistema.recorrido_postorden():
-        print(nodo.obtener_informacion())
-        print()
+    if sistema.buscar("Agenda") is None:
+        print("Búsqueda de 'Agenda': el archivo ya no existe.")
+    else:
+        print("Búsqueda de 'Agenda': el archivo todavía existe.")
+
+    print(sistema.eliminar("Apuntes"))
+
+    print("\nInorden después de eliminar:")
+    for nodo in sistema.recorrido_inorden():
+        print(f"- {nodo.nombre} ({nodo.tipo})")
