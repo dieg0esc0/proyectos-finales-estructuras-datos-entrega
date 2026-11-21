@@ -73,6 +73,21 @@ class InterfazSistemaArchivos:
             panel, text="Eliminar", style="Eliminar.TButton", command=self.abrir_eliminacion
         ).grid(row=7, column=0, columnspan=2, sticky=tk.EW, pady=(8, 0))
 
+        tk.Label(panel, text="RECORRIDOS", font=("TkDefaultFont", 13, "bold")).grid(
+            row=8, column=0, columnspan=2, sticky=tk.W, pady=(18, 4)
+        )
+        self.tipo_recorrido = tk.StringVar(self.ventana, value="Inorden")
+        selector_recorrido = tk.OptionMenu(
+            panel, self.tipo_recorrido, "Inorden", "Preorden", "Postorden"
+        )
+        selector_recorrido.config(takefocus=True)
+        selector_recorrido.grid(row=9, column=0, columnspan=2, sticky=tk.EW)
+
+        ttk.Button(
+            panel, text="Mostrar recorrido", style="Insertar.TButton",
+            command=self.mostrar_recorrido,
+        ).grid(row=10, column=0, columnspan=2, sticky=tk.EW, pady=(8, 0))
+
         self.canvas_arbol = tk.Canvas(
             centro, bg="white", highlightthickness=1, highlightbackground="#8E96A7"
         )
@@ -341,6 +356,25 @@ class InterfazSistemaArchivos:
 
     def confirmar_salida(self):
         self.ventana.destroy()
+
+    def mostrar_recorrido(self):
+        tipo = self.tipo_recorrido.get()
+        if tipo == "Inorden":
+            nodos = self.sistema.recorrido_inorden()
+        elif tipo == "Preorden":
+            nodos = self.sistema.recorrido_preorden()
+        else:
+            nodos = self.sistema.recorrido_postorden()
+
+        nombres = []
+        for nodo in nodos:
+            nombre = nodo.nombre
+            if nodo.tipo == "Archivo" and nodo.extension:
+                nombre += f".{nodo.extension}"
+            nombres.append(nombre)
+
+        resultado = " → ".join(nombres)
+        self.mostrar_mensaje(f"Recorrido {tipo.lower()}:\n{resultado}")
 
     def mostrar_mensaje(self, mensaje):
         self.resultados.config(state=tk.NORMAL)
