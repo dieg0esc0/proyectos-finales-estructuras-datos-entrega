@@ -59,6 +59,20 @@ class InterfazSistemaArchivos:
         )
         boton_insertar.grid(row=5, column=0, columnspan=2, sticky=tk.EW, pady=(12, 0))
 
+        estilo.configure("Buscar.TButton", background="#28744E", foreground="white", padding=6)
+        estilo.map("Buscar.TButton", background=[("active", "#205E3F")])
+        estilo.configure("Eliminar.TButton", background="#AD353E", foreground="white", padding=6)
+        estilo.map("Eliminar.TButton", background=[("active", "#892A32")])
+        estilo.configure("Cancelar.TButton", background="#626873", foreground="white", padding=6)
+        estilo.map("Cancelar.TButton", background=[("active", "#4C515A")])
+
+        ttk.Button(
+            panel, text="Buscar", style="Buscar.TButton", command=self.abrir_busqueda
+        ).grid(row=6, column=0, columnspan=2, sticky=tk.EW, pady=(8, 0))
+        ttk.Button(
+            panel, text="Eliminar", style="Eliminar.TButton", command=self.abrir_eliminacion
+        ).grid(row=7, column=0, columnspan=2, sticky=tk.EW, pady=(8, 0))
+
         self.canvas_arbol = tk.Canvas(
             centro, bg="white", highlightthickness=1, highlightbackground="#8E96A7"
         )
@@ -155,6 +169,128 @@ class InterfazSistemaArchivos:
             x - 70, y - 22, x + 70, y + 22, fill=fondo, outline=borde
         )
         canvas.create_text(x, y, text=nombre, fill=color_texto, width=128)
+
+    def _crear_dialogo(self, titulo, encabezado, color):
+        dialogo = tk.Toplevel(self.ventana)
+        dialogo.title(titulo)
+        dialogo.transient(self.ventana)
+        dialogo.resizable(False, False)
+
+        tk.Label(
+            dialogo, text=encabezado, bg=color, fg="white",
+            font=("TkDefaultFont", 15, "bold"), padx=16, pady=12,
+        ).pack(fill=tk.X)
+
+        contenido = tk.Frame(dialogo, padx=18, pady=16)
+        contenido.pack(fill=tk.BOTH, expand=True)
+        dialogo.bind("<Escape>", lambda evento: dialogo.destroy())
+        return dialogo, contenido
+
+    def _activar_dialogo(self, dialogo, foco):
+        dialogo.update_idletasks()
+        dialogo.grab_set()
+        foco.focus_force()
+
+    def abrir_busqueda(self):
+        self.dialogo_busqueda, contenido = self._crear_dialogo(
+            "Buscar elemento", "🔍 Buscar elemento", "#603BA0"
+        )
+        tk.Label(contenido, text="Nombre del elemento").pack(anchor=tk.W)
+        self.entrada_busqueda = tk.Entry(contenido, width=30)
+        self.entrada_busqueda.pack(fill=tk.X, pady=(6, 14))
+
+        botones = tk.Frame(contenido)
+        botones.pack(anchor=tk.E)
+        ttk.Button(
+            botones, text="Aceptar", style="Insertar.TButton",
+            command=self.confirmar_busqueda,
+        ).pack(side=tk.LEFT, padx=(0, 8))
+        ttk.Button(
+            botones, text="Cancelar", style="Cancelar.TButton",
+            command=self.dialogo_busqueda.destroy,
+        ).pack(side=tk.LEFT)
+
+        self.entrada_busqueda.bind("<Return>", self.confirmar_busqueda)
+        self._activar_dialogo(self.dialogo_busqueda, self.entrada_busqueda)
+
+    def confirmar_busqueda(self, evento=None):
+        nombre = self.entrada_busqueda.get()
+        self.dialogo_busqueda.destroy()
+        nodo = self.sistema.buscar(nombre)
+        if nodo is not None:
+            self.mostrar_informacion(nodo)
+        elif not nombre.strip():
+            self.mostrar_error("Escribe el nombre del elemento.")
+        else:
+            self.mostrar_error("Elemento no encontrado.")
+
+    def mostrar_informacion(self, nodo):
+        titulo = "Información del elemento"
+        dialogo, contenido = self._crear_dialogo(titulo, titulo, "#285C92")
+        extension = nodo.extension or "Sin extensión"
+        datos = (
+            ("Nombre", nodo.nombre),
+            ("Extensión", extension),
+            ("Tipo", nodo.tipo),
+            ("Tamaño", f"{nodo.tamano} bytes"),
+        )
+        for fila, (etiqueta, valor) in enumerate(datos):
+            tk.Label(contenido, text=etiqueta).grid(row=fila, column=0, sticky=tk.W, pady=4)
+            tk.Label(contenido, text=valor, wraplength=240, justify=tk.LEFT).grid(
+                row=fila, column=1, sticky=tk.W, padx=(16, 0), pady=4
+            )
+
+        boton = ttk.Button(contenido, text="OK", style="Buscar.TButton", command=dialogo.destroy)
+        boton.grid(row=4, column=0, columnspan=2, sticky=tk.E, pady=(12, 0))
+
+        dialogo.bind("<Return>", lambda evento: dialogo.destroy())
+        self._activar_dialogo(dialogo, boton)
+
+    def mostrar_error(self, mensaje):
+        titulo = "Error del sistema"
+        dialogo, contenido = self._crear_dialogo(titulo, titulo, "#AD353E")
+        tk.Label(contenido, text="✕", fg="#E35C65", font=("TkDefaultFont", 24, "bold")).pack()
+        tk.Label(contenido, text=mensaje, wraplength=300, justify=tk.CENTER).pack(pady=(6, 14))
+
+        boton = ttk.Button(
+            contenido, text="Aceptar", style="Eliminar.TButton", command=dialogo.destroy
+        )
+        boton.pack()
+
+        dialogo.bind("<Return>", lambda evento: dialogo.destroy())
+        self._activar_dialogo(dialogo, boton)
+
+    def abrir_eliminacion(self):
+        self.dialogo_eliminacion, contenido = self._crear_dialogo(
+            "Eliminar elemento", "Eliminar elemento", "#AD353E"
+        )
+        tk.Label(contenido, text="Nombre del elemento").pack(anchor=tk.W)
+        self.entrada_eliminacion = tk.Entry(contenido, width=30)
+        self.entrada_eliminacion.pack(fill=tk.X, pady=(6, 14))
+
+        botones = tk.Frame(contenido)
+        botones.pack(anchor=tk.E)
+        ttk.Button(
+            botones, text="Eliminar", style="Eliminar.TButton",
+            command=self.confirmar_eliminacion,
+        ).pack(side=tk.LEFT, padx=(0, 8))
+        ttk.Button(
+            botones, text="Cancelar", style="Cancelar.TButton",
+            command=self.dialogo_eliminacion.destroy,
+        ).pack(side=tk.LEFT)
+
+        self.entrada_eliminacion.bind("<Return>", self.confirmar_eliminacion)
+        self._activar_dialogo(self.dialogo_eliminacion, self.entrada_eliminacion)
+
+    def confirmar_eliminacion(self, evento=None):
+        nombre = self.entrada_eliminacion.get()
+        self.dialogo_eliminacion.destroy()
+        mensaje = self.sistema.eliminar(nombre)
+        if mensaje.endswith("eliminado correctamente."):
+            self.mostrar_mensaje(mensaje)
+            self.dibujar_arbol()
+        else:
+            self.mostrar_error(mensaje)
 
     def mostrar_mensaje(self, mensaje):
         self.resultados.config(state=tk.NORMAL)
