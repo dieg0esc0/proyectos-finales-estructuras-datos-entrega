@@ -86,7 +86,8 @@ class InterfazSistemaArchivos:
         )
         self.resultados.pack(fill=tk.X, pady=(0, 8))
 
-        boton_salir = tk.Button(inferior, text="Salir", command=self.ventana.destroy)
+        self.ventana.protocol("WM_DELETE_WINDOW", self.abrir_despedida)
+        boton_salir = tk.Button(inferior, text="Salir", command=self.abrir_despedida)
         boton_salir.pack(anchor=tk.E)
 
         self.actualizar_campos(self.tipo_elemento.get())
@@ -291,6 +292,55 @@ class InterfazSistemaArchivos:
             self.dibujar_arbol()
         else:
             self.mostrar_error(mensaje)
+
+    def abrir_despedida(self):
+        if self.ventana.grab_current() is not None:
+            return
+
+        despedida = tk.Toplevel(self.ventana)
+        despedida.title("Salir")
+        despedida.transient(self.ventana)
+        despedida.resizable(False, False)
+        despedida.protocol("WM_DELETE_WINDOW", despedida.destroy)
+
+        ancho, alto = 400, 330
+        x = self.ventana.winfo_rootx() + (self.ventana.winfo_width() - ancho) // 2
+        y = self.ventana.winfo_rooty() + (self.ventana.winfo_height() - alto) // 2
+        despedida.geometry(f"{ancho}x{alto}+{x}+{y}")
+
+        lila = "#F4EDFC"
+        morado = "#603BA0"
+        despedida.config(bg=lila)
+
+        icono = tk.Canvas(despedida, width=80, height=80, bg=lila, highlightthickness=0)
+        icono.pack(pady=(24, 12))
+        icono.create_oval(4, 4, 76, 76, fill=morado, outline="")
+        icono.create_text(40, 40, text="✓", fill="white", font=("TkDefaultFont", 30, "bold"))
+
+        tk.Label(
+            despedida, text="¡Hasta luego!", bg=lila, fg="#35204F",
+            font=("TkDefaultFont", 24, "bold"),
+        ).pack()
+        tk.Label(despedida, text="Gracias por usar el", bg=lila, fg="#35204F").pack(pady=(8, 2))
+        tk.Label(
+            despedida, text="Sistema de Archivos", bg=lila, fg="#35204F",
+            font=("TkDefaultFont", 14, "bold"),
+        ).pack()
+
+        botones = tk.Frame(despedida, bg=lila)
+        botones.pack(pady=(22, 0))
+        boton_volver = ttk.Button(
+            botones, text="Volver", style="Cancelar.TButton", command=despedida.destroy
+        )
+        boton_volver.pack(side=tk.LEFT, padx=(0, 10))
+        ttk.Button(
+            botones, text="Salir", style="Insertar.TButton", command=self.confirmar_salida
+        ).pack(side=tk.LEFT)
+
+        self._activar_dialogo(despedida, boton_volver)
+
+    def confirmar_salida(self):
+        self.ventana.destroy()
 
     def mostrar_mensaje(self, mensaje):
         self.resultados.config(state=tk.NORMAL)
