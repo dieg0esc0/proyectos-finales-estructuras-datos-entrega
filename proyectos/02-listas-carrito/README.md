@@ -7,7 +7,7 @@ Este proyecto simula el carrito de compras de una tienda en la consola. Toda la 
 ## Funcionalidades
 
 - Mostrar un catálogo precargado de 10 productos con ID, nombre y precio.
-- Buscar productos por ID o por nombre, sin distinguir mayúsculas y minúsculas.
+- Buscar productos por ID o por nombre (sin importar mayúsculas y minúsculas).
 - Agregar productos al carrito indicando la cantidad.
 - Ver el carrito con cantidad, precio unitario, subtotal y total acumulado.
 - Modificar la cantidad de un producto y actualizar el subtotal automáticamente.
@@ -30,7 +30,7 @@ Este proyecto simula el carrito de compras de una tienda en la consola. Toda la 
 
 | Archivo | Responsabilidad |
 | --- | --- |
-| [`lista.py`](lista.py) | Define la lista enlazada: `NodoLista`, `Lista` y `ExcepcionListaVacia`. |
+| [`lista.py`](lista.py) | Define la lista enlazada: `NodoLista` y `Lista`. |
 | [`carrito.py`](carrito.py) | Contiene las clases `Producto`, `ItemCarrito`, `Catalogo` y `Carrito`. |
 | [`main.py`](main.py) | Proporciona el menú de consola (clase `Tienda`). |
 | [`test_carrito.py`](test_carrito.py) | Contiene las pruebas automatizadas de la lista y del carrito. |
@@ -73,6 +73,5 @@ python3 -B -m unittest -v test_carrito.py
 - Clases y objetos.
 - Listas enlazadas simples.
 - Inserción, búsqueda, actualización y eliminación de nodos.
-- Excepciones.
 - Validación de datos.
 - Pruebas unitarias con `unittest`.

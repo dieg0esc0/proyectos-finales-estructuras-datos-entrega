@@ -1,89 +1,58 @@
 # Proyecto de Listas - Carrito de compras
-# Lista enlazada simple (igual que la vista en clase): NodoLista, Lista y ExcepcionListaVacia.
+# Lista enlazada simple, como la vista en clase: clases NodoLista y Lista.
+
 
 class NodoLista:
-    """Nodo de la lista: guarda un dato y la referencia al siguiente nodo."""
+    # Cada nodo guarda un dato y la referencia al siguiente nodo.
 
-    def __init__(self, objeto, nodo=None):
+    def __init__(self, objeto):
         self.datos = objeto
-        self.siguienteNodo = nodo
-
-
-class ExcepcionListaVacia(Exception):
-    """Error que se lanza cuando se quiere eliminar de una lista vacía."""
-
-    def __init__(self, nombre="Lista"):
-        super().__init__(nombre + " esta vacia")
+        self.siguienteNodo = None
 
 
 class Lista:
-    """Lista enlazada simple con referencia al primer y al último nodo."""
+    # Lista enlazada simple. Guarda el primer nodo y el último nodo.
 
-    def __init__(self, nombreLista="lista"):
-        self.nombre = nombreLista
+    def __init__(self):
         self.primerNodo = None
         self.ultimoNodo = None
 
     def estaVacia(self):
-        """Regresa True si la lista no tiene nodos."""
+        # Regresa True si la lista no tiene nodos.
         return self.primerNodo is None
 
-    def insertarAlFinal(self, elementoInsertar):
-        """Crea un nodo nuevo y lo liga después del último nodo."""
+    def insertarAlFinal(self, elemento):
+        # Crea un nodo nuevo y lo pone después del último nodo.
+        nuevo = NodoLista(elemento)
         if self.estaVacia():
-            self.primerNodo = self.ultimoNodo = NodoLista(elementoInsertar)
+            self.primerNodo = nuevo
+            self.ultimoNodo = nuevo
         else:
-            self.ultimoNodo.siguienteNodo = NodoLista(elementoInsertar)
-            self.ultimoNodo = self.ultimoNodo.siguienteNodo
-
-    def eliminarDelFrente(self):
-        """Quita el primer nodo y regresa su dato."""
-        if self.estaVacia():
-            raise ExcepcionListaVacia(self.nombre)
-        elementoEliminado = self.primerNodo.datos
-        if self.primerNodo == self.ultimoNodo:
-            self.primerNodo = self.ultimoNodo = None
-        else:
-            self.primerNodo = self.primerNodo.siguienteNodo
-        return elementoEliminado
-
-    def eliminarDelFinal(self):
-        """Quita el último nodo y regresa su dato."""
-        if self.estaVacia():
-            raise ExcepcionListaVacia(self.nombre)
-        elementoEliminado = self.ultimoNodo.datos
-        if self.primerNodo == self.ultimoNodo:
-            self.primerNodo = self.ultimoNodo = None
-        else:
-            actual = self.primerNodo
-            while actual.siguienteNodo != self.ultimoNodo:
-                actual = actual.siguienteNodo
-            self.ultimoNodo = actual
-            self.ultimoNodo.siguienteNodo = None
-        return elementoEliminado
+            self.ultimoNodo.siguienteNodo = nuevo
+            self.ultimoNodo = nuevo
 
     def eliminar(self, elemento):
-        """
-        Elimina un elemento de cualquier posición de la lista.
-        Si es el primero o el último usa los métodos anteriores; si está en medio,
-        liga el nodo anterior con el nodo siguiente.
-        """
-        if self.estaVacia():
-            raise ExcepcionListaVacia(self.nombre)
-        if self.primerNodo.datos == elemento:
-            return self.eliminarDelFrente()
-        if self.ultimoNodo.datos == elemento:
-            return self.eliminarDelFinal()
-        anterior = self.primerNodo
-        actual = self.primerNodo.siguienteNodo
+        # Quita el nodo que tiene ese elemento.
+        # Regresa True si lo encontró y False si no estaba en la lista.
+        anterior = None
+        actual = self.primerNodo
         while actual is not None:
             if actual.datos == elemento:
-                anterior.siguienteNodo = actual.siguienteNodo
-                return elemento
+                if anterior is None:
+                    # Es el primer nodo: ahora el primero es el siguiente.
+                    self.primerNodo = actual.siguienteNodo
+                else:
+                    # Está en medio o al final: se liga el anterior con el siguiente.
+                    anterior.siguienteNodo = actual.siguienteNodo
+                if actual == self.ultimoNodo:
+                    # Si era el último, ahora el último es el anterior.
+                    self.ultimoNodo = anterior
+                return True
             anterior = actual
             actual = actual.siguienteNodo
-        return None
+        return False
 
     def vaciar(self):
-        """Deja la lista sin nodos."""
-        self.primerNodo = self.ultimoNodo = None
+        # Deja la lista sin nodos.
+        self.primerNodo = None
+        self.ultimoNodo = None
