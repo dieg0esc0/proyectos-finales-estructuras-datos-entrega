@@ -29,7 +29,8 @@ class Tienda:
     def buscar_producto(self):
         # Busca en el catálogo por ID (si se escribe un número) o por nombre.
         texto = input("Escribe el ID o el nombre del producto: ")
-        if texto.isdigit():
+        # isdecimal() solo acepta dígitos que int() sí puede convertir (isdigit() también acepta ²).
+        if texto.isdecimal():
             producto = self.catalogo.buscar_por_id(int(texto))
         else:
             producto = self.catalogo.buscar_por_nombre(texto)
@@ -76,7 +77,7 @@ class Tienda:
             return
         self.ver_carrito()
         texto = input("Escribe el ID o el nombre del producto a eliminar: ")
-        if texto.isdigit():
+        if texto.isdecimal():
             item = self.carrito.buscar_por_id(int(texto))
         else:
             item = self.carrito.buscar_por_nombre(texto)
