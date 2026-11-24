@@ -1,4 +1,5 @@
 from carretera import Carretera
+from pueblo import Pueblo
 
 
 class Grafo:
@@ -39,3 +40,26 @@ class Grafo:
                 if origen <= carretera.destino:
                     carreteras.append([origen, carretera.destino, carretera.distancia])
         return carreteras
+
+    def cargar_pueblos(self, archivo):
+        with open(archivo, encoding="utf-8") as datos:
+            for linea in datos:
+                # Elimina espacios antes de revisar si la línea se debe omitir.
+                linea = linea.strip()
+                if not linea or linea.startswith("#"):
+                    continue
+
+                nombre, x, y = linea.split()
+                pueblo = Pueblo(nombre, int(x), int(y))
+                self.agregar_pueblo(pueblo)
+
+    def cargar_carreteras(self, archivo):
+        with open(archivo, encoding="utf-8") as datos:
+            for linea in datos:
+                linea = linea.strip()
+                if not linea or linea.startswith("#"):
+                    continue
+
+                origen, destino, distancia = linea.split()
+                # El grafo registra la conexión en ambos sentidos.
+                self.agregar_carretera(origen, destino, int(distancia))

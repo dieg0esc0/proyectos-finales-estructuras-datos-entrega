@@ -1,0 +1,8 @@
+# Pueblo x y
+Sisal 70 95
+Motul 260 70
+Izamal 335 195
+Espita 525 75
+Valladolid 570 235
+Maní 190 300
+Tekax 330 365
