@@ -33,6 +33,9 @@ Este proyecto simula un sistema de archivos mediante un árbol binario de búsqu
 | [`main.py`](main.py) | Proporciona el menú de consola. |
 | [`interfaz.py`](interfaz.py) | Proporciona la interfaz gráfica con Tkinter y dibuja el árbol. |
 | [`test_sistema_archivos.py`](test_sistema_archivos.py) | Contiene las pruebas automatizadas de `SistemaArchivos`. |
+| [`Documentacion_Sistema_Archivos.docx`](Documentacion_Sistema_Archivos.docx) | Documentación editable del proyecto, organizada en las fases 1 a 5. |
+| [`Documentacion_Sistema_Archivos.pdf`](Documentacion_Sistema_Archivos.pdf) | Versión en PDF de la documentación del proyecto. |
+| [`Diagrama_UML_Sistema_Archivos.png`](Diagrama_UML_Sistema_Archivos.png) | Diagrama UML basado en las clases y dependencias reales del código. |
 
 ## Ejemplo del árbol
 
