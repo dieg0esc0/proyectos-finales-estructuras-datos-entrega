@@ -26,7 +26,7 @@ class Dijkstra:
         while actual is not None:
             visitados.append(actual)
 
-            # Actualiza la mejor distancia conocida a cada vecino.
+            
             for carretera in self.grafo.vecinos(actual):
                 vecino = carretera.destino
                 distancia_nueva = distancias[actual] + carretera.distancia
@@ -53,7 +53,7 @@ class Dijkstra:
         if distancias.get(destino, INFINITO) == INFINITO:
             return Ruta([], [], 0)
 
-        # Sigue los pueblos anteriores y luego invierte el recorrido.
+        
         pueblos = [destino]
         actual = destino
         while actual != origen:

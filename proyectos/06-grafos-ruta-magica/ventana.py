@@ -68,7 +68,7 @@ class VentanaRutaMagica:
             self.matriz.heading(pueblo, text=pueblo)
             self.matriz.column(pueblo, width=100, minwidth=85, anchor="center")
 
-        # Cada celda representa una conexión directa entre la fila y la columna.
+        
         for origen in pueblos:
             fila = []
             for destino in pueblos:
@@ -85,7 +85,7 @@ class VentanaRutaMagica:
         self.mapa.delete("all")
         etiquetas = []
 
-        # Dibuja primero las líneas para dejar los nombres y kilómetros encima.
+        
         for origen, destino, distancia in self.grafo.lista_carreteras():
             inicio = self.grafo.pueblos[origen]
             fin = self.grafo.pueblos[destino]
