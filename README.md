@@ -13,4 +13,4 @@ Repositorio para los seis proyectos finales desarrollados en Python.
 
 ## Estado
 
-Estructura inicial preparada. Los archivos finales de cada proyecto se incorporarán después de su revisión.
+Los seis proyectos están completos. Cada carpeta contiene el código, su README y la documentación del proyecto.
