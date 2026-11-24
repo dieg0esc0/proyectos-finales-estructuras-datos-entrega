@@ -109,7 +109,8 @@ class VentanaResistencia:
     def calcular_circuito(self):
         # Revisa n, genera los resistores y muestra los totales en serie y en paralelo.
         texto = self.entrada_n.get()
-        if not texto.isdigit() or int(texto) < 1 or int(texto) > MAXIMO_N:
+        # isdecimal() solo acepta dígitos que int() sí puede convertir (isdigit() también acepta ²).
+        if not texto.isdecimal() or int(texto) < 1 or int(texto) > MAXIMO_N:
             messagebox.showerror("Dato no válido", "n debe ser un número entero entre 1 y " + str(MAXIMO_N) + ".")
             return
 

@@ -59,6 +59,11 @@ class Resistencia:
 
     def colores_valor_grande(self):
         # Para valores de 10 o más: dos dígitos y después solo ceros.
+        # Si el valor tiene 12 cifras o más (o es infinito, como 1e309), no cabe en la tabla.
+        if self.valor >= 100000000000:
+            self.error = "El valor es demasiado grande para la tabla de colores."
+            return False
+
         if self.valor != int(self.valor):
             self.error = "Los valores de 10 ohmios o más deben ser enteros."
             return False
@@ -90,7 +95,8 @@ class Resistencia:
         dos_digitos = round(self.valor / multiplicador)
 
         # Si la división no da un número entero, el valor tiene demasiados decimales.
-        if abs(self.valor / multiplicador - dos_digitos) > 0.001:
+        # Si al redondear da 100 (por ejemplo 9.99999), ya no son dos dígitos.
+        if abs(self.valor / multiplicador - dos_digitos) > 0.001 or dos_digitos > 99:
             self.error = "El valor " + str(self.valor) + " tiene demasiados decimales para 3 bandas."
             return False
 
