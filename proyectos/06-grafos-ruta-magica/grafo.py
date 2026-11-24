@@ -15,7 +15,7 @@ class Grafo:
         carreteras_origen = self.adyacencia[origen]
         carreteras_destino = self.adyacencia[destino]
 
-        # Una carretera se puede recorrer en ambos sentidos.
+        
         carreteras_origen.append(Carretera(destino, distancia))
         if origen != destino:
             carreteras_destino.append(Carretera(origen, distancia))
@@ -36,7 +36,7 @@ class Grafo:
         carreteras = []
         for origen, vecinas in self.adyacencia.items():
             for carretera in vecinas:
-                # El orden de los nombres permite mostrar un solo sentido.
+                
                 if origen <= carretera.destino:
                     carreteras.append([origen, carretera.destino, carretera.distancia])
         return carreteras
@@ -44,7 +44,7 @@ class Grafo:
     def cargar_pueblos(self, archivo):
         with open(archivo, encoding="utf-8") as datos:
             for linea in datos:
-                # Elimina espacios antes de revisar si la línea se debe omitir.
+                
                 linea = linea.strip()
                 if not linea or linea.startswith("#"):
                     continue
@@ -61,5 +61,5 @@ class Grafo:
                     continue
 
                 origen, destino, distancia = linea.split()
-                # El grafo registra la conexión en ambos sentidos.
+                
                 self.agregar_carretera(origen, destino, int(distancia))
