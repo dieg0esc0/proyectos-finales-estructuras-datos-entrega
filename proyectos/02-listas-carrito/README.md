@@ -2,7 +2,7 @@
 
 ## Descripción
 
-Este proyecto simula el carrito de compras de una tienda en la consola. Toda la información se guarda en memoria usando listas enlazadas simples, como la vista en clase: el catálogo es una lista de productos y el carrito es una lista de renglones con el producto y la cantidad.
+Este proyecto simula el carrito de compras de una tienda, con versión de consola y versión gráfica. Toda la información se guarda en memoria usando listas enlazadas simples, como la vista en clase: el catálogo es una lista de productos y el carrito es una lista de renglones con el producto y la cantidad.
 
 ## Funcionalidades
 
@@ -15,6 +15,7 @@ Este proyecto simula el carrito de compras de una tienda en la consola. Toda la 
 - Vaciar el carrito y reiniciar la compra.
 - Finalizar la compra mostrando los productos, el total de artículos y el monto a pagar.
 - Validar las entradas del usuario.
+- Usar un menú de consola o una interfaz gráfica con Tkinter.
 - Ejecutar pruebas automatizadas con `unittest`.
 
 ## Reglas del carrito
@@ -33,6 +34,7 @@ Este proyecto simula el carrito de compras de una tienda en la consola. Toda la 
 | [`lista.py`](lista.py) | Define la lista enlazada: `NodoLista` y `Lista`. |
 | [`carrito.py`](carrito.py) | Contiene las clases `Producto`, `ItemCarrito`, `Catalogo` y `Carrito`. |
 | [`main.py`](main.py) | Proporciona el menú de consola (clase `Tienda`). |
+| [`interfaz.py`](interfaz.py) | Proporciona la interfaz gráfica con Tkinter (clase `VentanaCarrito`): catálogo a la izquierda y carrito a la derecha. |
 | [`test_carrito.py`](test_carrito.py) | Contiene las pruebas automatizadas de la lista y del carrito. |
 | [`Documentacion_Carrito_Compras.docx`](Documentacion_Carrito_Compras.docx) | Documentación del proyecto. |
 
@@ -50,11 +52,20 @@ Al eliminar la Memoria USB, el nodo del Mouse pasa a apuntar directamente al de 
 ## Requisitos
 
 - Python 3.
+- Tkinter para la interfaz gráfica. Normalmente está incluido con Python.
 - No es necesario instalar bibliotecas externas.
+
+## Ejecutar la interfaz gráfica
+
+Abre una terminal dentro de la carpeta del Proyecto 2 (`proyectos/02-listas-carrito/`) y ejecuta:
+
+```bash
+python3 interfaz.py
+```
 
 ## Ejecutar la versión de consola
 
-Abre una terminal dentro de la carpeta del Proyecto 2 (`proyectos/02-listas-carrito/`) y ejecuta:
+Desde la misma carpeta, ejecuta:
 
 ```bash
 python3 main.py
@@ -75,3 +86,4 @@ python3 -B -m unittest -v test_carrito.py
 - Inserción, búsqueda, actualización y eliminación de nodos.
 - Validación de datos.
 - Pruebas unitarias con `unittest`.
+- Interfaces gráficas con Tkinter.
